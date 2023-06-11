@@ -75,18 +75,31 @@ const updateUser = (req, res) => {
       { name, about },
       { new: true, runValidators: true },
     )
+    .orFail(() => new Error('Not found'))
     .then((user) => {
-      if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
-      } else {
-        res.send({ user });
-      }
+      // if (!user) {
+      //   res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
+      // } else {
+      res.send({ user });
+      // }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({
           message: 'Переданы некорректные данные',
         });
+      } else if (err.name === 'CastError') {
+        res
+          .status(BAD_REQUEST)
+          .send({
+            message: 'Передан некорректный id пользоателя',
+          });
+      } else if (err.name === 'Not found') {
+        res
+          .status(NOT_FOUND)
+          .send({
+            message: 'Запрашиваемый пользователь не найден',
+          });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send({
           message: 'На сервере произошла ошибка',
@@ -100,18 +113,31 @@ const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
   userModel
     .findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
+    .orFail(() => new Error('Not found'))
     .then((user) => {
-      if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
-      } else {
-        res.send({ user });
-      }
+      // if (!user) {
+      //   res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
+      // } else {
+      res.send({ user });
+      // }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({
           message: 'Переданы некорректные данные',
         });
+      } else if (err.name === 'CastError') {
+        res
+          .status(BAD_REQUEST)
+          .send({
+            message: 'Передан некорректный id пользоателя',
+          });
+      } else if (err.name === 'Not found') {
+        res
+          .status(NOT_FOUND)
+          .send({
+            message: 'Запрашиваемый пользователь не найден',
+          });
       } else {
         res.status(INTERNAL_SERVER_ERROR).send({
           message: 'На сервере произошла ошибка',
