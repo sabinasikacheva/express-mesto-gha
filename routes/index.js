@@ -1,0 +1,13 @@
+const router = require('express').Router();
+const userRouter = require('./users');
+const cardRouter = require('./cards');
+// const { NOT_FOUND } = require('../utils/errors');
+
+router.use('/users', userRouter);
+router.use('/cards', cardRouter);
+
+// router.use('*', (req, res) => {
+//   res.status(NOT_FOUND).send({ message: 'Такой ссылки не существует' });
+// });
+
+module.exports = router;
