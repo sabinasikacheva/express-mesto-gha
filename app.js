@@ -1,21 +1,31 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 const router = require('./routes');
+const { errors } = require('celebrate');
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 const app = express();
 
+app.use(helmet());
+
 app.use(express.json());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: new mongoose.Types.ObjectId('648377728fe2577fa37747b6'),
-  };
+app.use(router);
+app.use(errors());
+
+app.use((err, req, res, next) => {
+  const {
+    statusCode = 500,
+    message,
+  } = err;
+  res.status(statusCode)
+    .send({
+      message: statusCode === 500 ? 'Ошибка на сервере' : message,
+    });
   next();
 });
-
-app.use(router);
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
