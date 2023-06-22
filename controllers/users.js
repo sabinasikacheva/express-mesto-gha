@@ -111,18 +111,18 @@ const loginUser = (req, res, next) => {
 
 const getCurrentUser = (req, res, next) => {
   userModel.findById(req.user._id)
+    .orFail(() => {
+      throw new NotFoundError('Пользователь не найден');
+    })
     .then((user) => {
-      if (user) {
-        res.status(200).send({ user });
-      } else {
-        throw new NotFoundError('Пользователь с данным _id не найден');
-      }
+      res.send(user);
     })
     .catch((err) => {
-      if (err.code === 11000) {
-        return next(new BadRequestError('Переданы некорректные данные'));
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Введены некорректные данные'));
+      } else {
+        next(err);
       }
-      return next(err);
     });
 };
 
