@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const router = require('./routes');
 const { errors } = require('celebrate');
+const router = require('./routes');
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 

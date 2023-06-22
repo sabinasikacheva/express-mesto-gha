@@ -1,10 +1,9 @@
-const userModel = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const userModel = require('../models/user');
 const BadRequestError = require('../utils/errors/BadRequestError'); // 400
 const NotFoundError = require('../utils/errors/NotFoundError'); // 404
 const ConflictError = require('../utils/errors/ConflictError'); // 409
-const UnauthorizedError = require('../utils/errors/UnauthorizedError'); // 401
 
 const getUsers = (req, res, next) => {
   userModel.find({})
@@ -29,10 +28,14 @@ const getUserById = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
 
   bcrypt.hash(password, 10)
-    .then((hash) => userModel.create({ name, about, avatar, email, password: hash }))
+    .then((hash) => userModel.create({
+      name, about, avatar, email, password: hash,
+    }))
     .then(() => res.status(201).send({
       name, about, avatar, email,
     }))
@@ -110,7 +113,7 @@ const getCurrentUser = (req, res, next) => {
   userModel.findById(req.user._id)
     .then((user) => {
       if (user) {
-        res.status(200).send({ data: user });
+        res.status(200).send({ user });
       } else {
         throw new NotFoundError('Пользователь с данным _id не найден');
       }
