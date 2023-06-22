@@ -36,8 +36,11 @@ const createUser = (req, res, next) => {
     .then((hash) => userModel.create({
       name, about, avatar, email, password: hash,
     }))
-    .then(() => res.status(201).send({
-      name, about, avatar, email,
+    .then((user) => res.status(201).send({
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      email: user.email,
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -110,12 +113,13 @@ const loginUser = (req, res, next) => {
 };
 
 const getCurrentUser = (req, res, next) => {
-  userModel.findById(req.user._id)
+  const userId = req.user._id;
+  userModel.findById(userId)
     .orFail(() => {
       throw new NotFoundError('Пользователь не найден');
     })
     .then((user) => {
-      res.send(user);
+      res.status(200).send({ user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
