@@ -113,8 +113,7 @@ const loginUser = (req, res, next) => {
 };
 
 const getCurrentUser = (req, res, next) => {
-  const userId = req.user._id;
-  userModel.findById(userId)
+  userModel.findById(req.user._id)
     .orFail(() => {
       throw new NotFoundError('Пользователь не найден');
     })
