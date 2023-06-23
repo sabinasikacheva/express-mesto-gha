@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
-  "author": "",
+  "author": "Sabina Sikacheva",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^8.42.0",

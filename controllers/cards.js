@@ -44,7 +44,7 @@ const deleteCard = (req, res, next) => {
         throw new ForbiddenError('Нет прав для удаления карточки');
       }
       cardModel.findByIdAndRemove(req.params.cardId)
-        .then((deletedCard) => res.status(200).send(deletedCard))
+        .then((deletedCard) => res.send(deletedCard))
         .catch(next);
     })
     .catch((err) => {
@@ -66,7 +66,7 @@ const likeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-      res.status(200).send({ card });
+      res.send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -87,7 +87,7 @@ const dislikeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-      res.status(200).send({ card });
+      res.send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
